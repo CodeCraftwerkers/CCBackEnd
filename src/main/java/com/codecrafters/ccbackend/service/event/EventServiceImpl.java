@@ -3,7 +3,6 @@ package com.codecrafters.ccbackend.service.event;
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
 import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
 import com.codecrafters.ccbackend.entity.Event;
-import com.codecrafters.ccbackend.entity.Event.EventCategory;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.mapper.EventMapper;
 import com.codecrafters.ccbackend.repository.EventRepository;
@@ -11,10 +10,8 @@ import com.codecrafters.ccbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.function.Predicate;
 
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -67,48 +64,23 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll(pageable).map(eventMapper::toResponse);
     }
 
+   
     @Override
-    public Page<EventResponseDTO> filterEvents(
-            String title,
-            String username,
-            String categoryStr,
-            LocalDateTime start,
-            LocalDateTime end,
-            int page,
-            int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("startDateTime").ascending());
-        EventCategory category = null;
-
-        if (StringUtils.hasText(categoryStr)) {
+    public Page<EventResponseDTO> filterEvents(String title, String username, String category, LocalDateTime start,
+            LocalDateTime end, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").ascending());
+        if (StringUtils.hasText(category)) {
             try {
-                category = EventCategory.valueOf(categoryStr.toUpperCase());
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Invalid category");
             }
         }
 
-        return eventRepository.findAll((root, query, cb) -> {
-            Predicate predicate = cb.conjunction();
+        Page<Event> events = eventRepository.findAll(pageable);
+        
 
-            if (StringUtils.hasText(title)) {
-                predicate = cb.and(predicate,
-                        cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
-            }
-
-            if (StringUtils.hasText(username)) {
-                predicate = cb.and(predicate,
-                        cb.equal(root.get("user").get("username"), username));
-            }
-
-            if (category != null) {
-                predicate = cb.and(predicate, cb.equal(root.get("category"), category));
-            }
-
-            if (start != null && end != null) {
-                predicate = cb.and(predicate, cb.between(root.get("startDateTime"), start, end));
-            }
-
-            return predicate;
-        }, pageable).map(eventMapper::toResponse);
+        return events.map(eventMapper::toResponse);
     }
+
+
 }
