@@ -1,5 +1,10 @@
 package com.codecrafters.ccbackend.repository;
 
-public class EventRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.codecrafters.ccbackend.entity.Event;
+
+public interface EventRepository extends JpaRepository <Event, Long>  {
+
+    
     
 }
