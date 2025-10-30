@@ -1,5 +1,8 @@
 package com.codecrafters.ccbackend.repository;
 
-public class UserRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.codecrafters.ccbackend.entity.User;
+
+public interface UserRepository extends JpaRepository <User, Long> {
     
 }
