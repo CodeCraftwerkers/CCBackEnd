@@ -1,11 +1,13 @@
 package com.codecrafters.ccbackend.mapper;
 
 import org.mapstruct.*;
-import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
 import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserSummaryDTO;
 import com.codecrafters.ccbackend.entity.Event;
 import com.codecrafters.ccbackend.entity.User;
 
@@ -16,9 +18,11 @@ public interface EventMapper {
     @Mapping(target = "user", source = "user")
 
     Event toEntity(EventRequestDTO request, User user);
-    
-    @Mapping(target = "userId", source = "user")
+
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "attendees", expression = "java(mapAttendees(event.getAttendees()))")
     EventResponseDTO toResponse(Event event);
+
     UserResponseDTO userToUserResponseDTO(User user);
 
     @Mapping(target = "id", ignore = true)
@@ -27,7 +31,12 @@ public interface EventMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromRequest(EventRequestDTO request, @MappingTarget Event event);
 
-    default Locale.Category map(Event.EventCategory category) {
-        return category == null ? null : Locale.Category.valueOf(category.name());
+    default Set<UserSummaryDTO> mapAttendees(Set<User> attendees) {
+        if (attendees == null)
+            return Set.of();
+        return attendees.stream()
+                .map(u -> new UserSummaryDTO(u.getId(), u.getUsername()))
+                .collect(Collectors.toSet());
+
     }
 }

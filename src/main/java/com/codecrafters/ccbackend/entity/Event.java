@@ -1,6 +1,8 @@
 package com.codecrafters.ccbackend.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -48,4 +50,7 @@ public class Event {
     @JsonIgnore
     private User user;
 
+    @ManyToMany(mappedBy = "signedUpEvents")
+    @Builder.Default
+    private Set<User> attendees = new HashSet<>();
 }
