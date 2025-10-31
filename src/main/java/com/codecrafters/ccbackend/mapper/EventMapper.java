@@ -16,7 +16,7 @@ public interface EventMapper {
     @Mapping(target = "user", source = "user")
 
     Event toEntity(EventRequestDTO request, User user);
-
+    
     @Mapping(target = "userId", source = "user")
     EventResponseDTO toResponse(Event event);
     UserResponseDTO userToUserResponseDTO(User user);

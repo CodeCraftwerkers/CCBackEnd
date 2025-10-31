@@ -1,7 +1,8 @@
 package com.codecrafters.ccbackend.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.Locale.Category;
+
+import com.codecrafters.ccbackend.entity.Event.EventCategory;
 
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class EventResponseDTO {
     private LocalDateTime endDateTime;
     private Integer maxAttendees;
     private String location;
-    private Category category;
+    private EventCategory category;
     private String imageUrl;
     private UserResponseDTO userId;
 }
