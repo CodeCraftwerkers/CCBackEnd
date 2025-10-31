@@ -16,6 +16,7 @@ public interface EventMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user")
+    @Mapping(target = "attendees", ignore = true)
 
     Event toEntity(EventRequestDTO request, User user);
 
@@ -29,6 +30,7 @@ public interface EventMapper {
     @Mapping(target = "user", ignore = true)
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "attendees", ignore = true)
     void updateEntityFromRequest(EventRequestDTO request, @MappingTarget Event event);
 
     default Set<UserSummaryDTO> mapAttendees(Set<User> attendees) {
