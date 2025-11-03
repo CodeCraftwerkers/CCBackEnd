@@ -29,7 +29,7 @@ public class Event {
 
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-
+  
     @Column(name = "max_attendees")
     private Integer maxAttendees;
 

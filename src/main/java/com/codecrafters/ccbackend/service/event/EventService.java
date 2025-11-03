@@ -18,6 +18,7 @@ public interface EventService {
             String title,
             String username,
             String category,
+            String timeRange,
             LocalDateTime start,
             LocalDateTime end,
             int page,

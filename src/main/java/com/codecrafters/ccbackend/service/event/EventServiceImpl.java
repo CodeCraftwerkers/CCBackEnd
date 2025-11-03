@@ -64,23 +64,61 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findAll(pageable).map(eventMapper::toResponse);
     }
 
-   
     @Override
-    public Page<EventResponseDTO> filterEvents(String title, String username, String category, LocalDateTime start,
+    public Page<EventResponseDTO> filterEvents(String title, String username, String categoryStr, String timeRange, LocalDateTime start,
             LocalDateTime end, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("date").ascending());
-        if (StringUtils.hasText(category)) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("startDateTime").ascending());
+        Page<Event> events = Page.empty(pageable);
+
+        if (StringUtils.hasText(categoryStr)) {
             try {
+                Event.EventCategory category = Event.EventCategory.valueOf(categoryStr.toUpperCase());
+                events = eventRepository.findByCategory(category, pageable);
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid category");
+                throw new RuntimeException("Invalid category: " + categoryStr);
             }
         }
 
-        Page<Event> events = eventRepository.findAll(pageable);
+        else if (StringUtils.hasText(title)) {
+            events = eventRepository.findByTitleContainingIgnoreCase(title, pageable);
+        }
+
+        else if (StringUtils.hasText(username)) {
+            events = eventRepository.findByUserUsername(username, pageable);
+        }
+
+        else if (StringUtils.hasText(timeRange)) {
+
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime startRange;
+            LocalDateTime endRange;
         
+            switch (timeRange.toLowerCase()) {
+                case "today" -> {
+                    startRange = now.toLocalDate().atStartOfDay();
+                    endRange = startRange.plusDays(1);
+                }
+                case "week" -> {
+                    startRange = now.with(java.time.DayOfWeek.MONDAY).toLocalDate().atStartOfDay();
+                    endRange = startRange.plusDays(7);
+                }
+                case "month" -> {
+                    startRange = now.withDayOfMonth(1).toLocalDate().atStartOfDay();
+                    endRange = startRange.plusMonths(1);
+                }
+                default -> throw new RuntimeException("Invalid timeRange. Use: today, week, month");
+            }
+        
+            events = eventRepository.findByStartDateTimeBetween(startRange, endRange, pageable);
+        }
+
+        else {
+            events = eventRepository.findAll(pageable);
+        }
 
         return events.map(eventMapper::toResponse);
     }
 
+    
 
 }

@@ -13,5 +13,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findByTitleContainingIgnoreCase(String title, Pageable pageable);
     Page<Event> findByUserUsername(String username, Pageable pageable);
     Page<Event> findByStartDateTime(LocalDateTime start, Pageable pageable);
+    Page<Event> findByStartDateTimeBetween(LocalDateTime startRange, LocalDateTime endRange, Pageable pageable);
 
 }
