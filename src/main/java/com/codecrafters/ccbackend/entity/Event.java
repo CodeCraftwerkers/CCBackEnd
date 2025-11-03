@@ -50,7 +50,12 @@ public class Event {
     @JsonIgnore
     private User user;
 
-    @ManyToMany(mappedBy = "signedUpEvents")
+    @ManyToMany
+    @JoinTable(
+        name = "event_signups",
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     @Builder.Default
     private Set<User> attendees = new HashSet<>();
 }

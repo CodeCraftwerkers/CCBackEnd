@@ -1,6 +1,8 @@
 package com.codecrafters.ccbackend.mapper;
 
 import org.mapstruct.*;
+
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,12 +35,12 @@ public interface EventMapper {
     @Mapping(target = "attendees", ignore = true)
     void updateEntityFromRequest(EventRequestDTO request, @MappingTarget Event event);
 
-    default Set<UserSummaryDTO> mapAttendees(Set<User> attendees) {
+    default List<UserSummaryDTO> mapAttendees(Set<User> attendees) {
         if (attendees == null)
-            return Set.of();
+            return List.of();
         return attendees.stream()
                 .map(u -> new UserSummaryDTO(u.getId(), u.getUsername()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
     }
 }

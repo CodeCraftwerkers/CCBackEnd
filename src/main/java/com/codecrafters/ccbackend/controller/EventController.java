@@ -43,7 +43,7 @@ public class EventController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String category,
-            @RequestParam(required=false) String timeRange,
+            @RequestParam(required = false) String timeRange,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestParam(defaultValue = "0") int page,
@@ -61,6 +61,16 @@ public class EventController {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
-    
 
+    @PostMapping("/{eventId}/signup")
+    public ResponseEntity<Void> signupToEvent(@PathVariable Long eventId, @RequestParam Long userId) {
+        eventService.signup(eventId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{eventId}/signup")
+    public ResponseEntity<Void> unsignFromEvent(@PathVariable Long eventId, @RequestParam Long userId) {
+        eventService.unsign(eventId, userId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -23,5 +23,7 @@ public interface EventService {
             LocalDateTime end,
             int page,
             int size);
+    void signup(Long eventId, Long userId);
+    void unsign(Long eventId, Long userId);
 
 }
