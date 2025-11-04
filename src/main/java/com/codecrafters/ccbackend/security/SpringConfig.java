@@ -2,6 +2,7 @@ package com.codecrafters.ccbackend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -11,7 +12,7 @@ import com.codecrafters.ccbackend.security.filter.JWTAuthorization;
 
 @Configuration
 public class SpringConfig {
-    
+
     private CustomAuthenticationManager customAuthenticationManager;
 
     public SpringConfig(CustomAuthenticationManager customAuthenticationManager) {
@@ -26,9 +27,8 @@ public class SpringConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/h2/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events").permitAll()
                         .anyRequest().authenticated())
                 .addFilter(jwtAuthentication)
                 .addFilterAfter(new JWTAuthorization(), JWTAuthentication.class)
