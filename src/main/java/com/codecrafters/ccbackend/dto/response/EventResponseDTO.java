@@ -1,7 +1,7 @@
 package com.codecrafters.ccbackend.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+
 
 import com.codecrafters.ccbackend.entity.Event.EventCategory;
 
@@ -22,5 +22,5 @@ public class EventResponseDTO {
     private EventCategory category;
     private String imageUrl;
     private Long userId;
-    private Set<UserSummaryDTO> attendees;
+    
 }
