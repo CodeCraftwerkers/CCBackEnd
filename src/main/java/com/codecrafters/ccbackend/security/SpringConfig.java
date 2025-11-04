@@ -11,6 +11,7 @@ import com.codecrafters.ccbackend.security.filter.JWTAuthorization;
 
 @Configuration
 public class SpringConfig {
+    
     private CustomAuthenticationManager customAuthenticationManager;
 
     public SpringConfig(CustomAuthenticationManager customAuthenticationManager) {

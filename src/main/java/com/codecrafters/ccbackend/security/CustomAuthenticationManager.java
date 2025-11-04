@@ -7,9 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.codecrafters.ccbackend.service.user.UserService;
 
+@Component
 public class CustomAuthenticationManager implements AuthenticationManager {
 
     private UserService userService;
