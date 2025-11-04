@@ -1,11 +1,15 @@
 package com.codecrafters.ccbackend.service.user;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.codecrafters.ccbackend.dto.request.UserRequestDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.mapper.UserMapper;
 import com.codecrafters.ccbackend.repository.UserRepository;
+import com.codecrafters.ccbackend.security.UserDetail;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -60,5 +64,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found");
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+        .map(user -> new UserDetail(user))
+        .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

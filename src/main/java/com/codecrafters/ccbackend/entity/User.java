@@ -36,6 +36,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    private String role;
+
     private String password;
 
     @ManyToMany
@@ -46,5 +48,7 @@ public class User {
     )
     @Builder.Default
     private Set<Event> signedUpEvents = new HashSet<>();
+
+    
     
 }
