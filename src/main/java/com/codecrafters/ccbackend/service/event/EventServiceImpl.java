@@ -2,16 +2,22 @@ package com.codecrafters.ccbackend.service.event;
 
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
 import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
 import com.codecrafters.ccbackend.entity.Event;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.mapper.EventMapper;
 import com.codecrafters.ccbackend.repository.EventRepository;
 import com.codecrafters.ccbackend.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -65,7 +71,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Page<EventResponseDTO> filterEvents(String title, String username, String categoryStr, String timeRange, LocalDateTime start,
+    public Page<EventResponseDTO> filterEvents(String title, String username, String categoryStr, String timeRange,
+            LocalDateTime start,
             LocalDateTime end, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("startDateTime").ascending());
         Page<Event> events = Page.empty(pageable);
@@ -92,7 +99,7 @@ public class EventServiceImpl implements EventService {
             LocalDateTime now = LocalDateTime.now();
             LocalDateTime startRange;
             LocalDateTime endRange;
-        
+
             switch (timeRange.toLowerCase()) {
                 case "today" -> {
                     startRange = now.toLocalDate().atStartOfDay();
@@ -108,7 +115,7 @@ public class EventServiceImpl implements EventService {
                 }
                 default -> throw new RuntimeException("Invalid timeRange. Use: today, week, month");
             }
-        
+
             events = eventRepository.findByStartDateTimeBetween(startRange, endRange, pageable);
         }
 
@@ -119,6 +126,80 @@ public class EventServiceImpl implements EventService {
         return events.map(eventMapper::toResponse);
     }
 
-    
+    @Override
+    @Transactional
+    public EventResponseDTO signUp(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
 
+        User current = getCurrentUserOrThrow();
+
+        if (event.getAttendees().contains(current)) {
+            throw new RuntimeException("User already signed up for this event");
+        }
+
+        if (event.getMaxAttendees() != null &&
+                event.getAttendees().size() >= event.getMaxAttendees()) {
+            throw new RuntimeException("Event is full");
+        }
+
+        current.getSignedUpEvents().add(event);
+        event.getAttendees().add(current);
+
+        userRepository.save(current);
+
+        return eventMapper.toResponse(event);
+    }
+
+    @Override
+    @Transactional
+    public EventResponseDTO unSign(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        User current = getCurrentUserOrThrow();
+
+        if (!event.getAttendees().contains(current)) {
+            throw new RuntimeException("User is not signed up for this event");
+        }
+
+        current.getSignedUpEvents().remove(event);
+        event.getAttendees().remove(current);
+
+        return eventMapper.toResponse(event);
+    }
+
+    private User getCurrentUserOrThrow() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getName() == null) {
+            throw new RuntimeException("No authenticated user");
+        }
+        String name = auth.getName();
+
+        System.out.println(auth);
+
+        return userRepository.findByUsername(name)
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+
+    }
+
+    @Override
+    public List<UserResponseDTO> getAttendees(Long eventId) {
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        return event.getAttendees()
+                .stream()
+                .map(this::userToUserResponseDTO)
+                .toList();
+    }
+
+    private UserResponseDTO userToUserResponseDTO(User user) {
+        UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(user.getId());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        return dto;
+    }
 }

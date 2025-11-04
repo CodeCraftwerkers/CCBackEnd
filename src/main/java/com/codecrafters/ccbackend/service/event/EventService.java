@@ -2,10 +2,12 @@ package com.codecrafters.ccbackend.service.event;
 
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
 import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
 
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface EventService {
 
@@ -23,5 +25,8 @@ public interface EventService {
             LocalDateTime end,
             int page,
             int size);
+    EventResponseDTO signUp(Long eventId);
+    EventResponseDTO unSign(Long eventId);
+    List<UserResponseDTO> getAttendees(Long eventId);
 
 }
