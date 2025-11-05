@@ -14,5 +14,6 @@ public interface UserService {
     UserResponseDTO getUserById(Long id);
     UserResponseDTO updateUser(Long id, User user);
     void deleteUser(Long id);
-    UserDetails loadUserByUsername(String name);
+    //UserDetails loadUserByUsername(String name);
+    UserDetails loadUserByEmail(String name);
 }

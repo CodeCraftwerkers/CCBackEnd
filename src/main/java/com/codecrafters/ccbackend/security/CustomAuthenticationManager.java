@@ -24,7 +24,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserDetails user = userService.loadUserByUsername(authentication.getName());
+        UserDetails user = userService.loadUserByEmail(authentication.getName());
         if (!bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword()))
             throw new BadCredentialsException("credenciales inválidas");
         return new UsernamePasswordAuthenticationToken(authentication.getName(), user.getPassword(),

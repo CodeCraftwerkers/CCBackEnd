@@ -3,6 +3,8 @@ package com.codecrafters.ccbackend.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 
+@JsonIgnoreProperties(ignoreUnknown = true) //se o json tiver campos que nao existem, ignore-os
 @Entity
 @Table(name = "users")
 @Data

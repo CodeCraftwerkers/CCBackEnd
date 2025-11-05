@@ -38,7 +38,7 @@ public class JWTAuthorization extends OncePerRequestFilter {
                 .build()
                 .verify(token);
 
-        String username = decodedJWT.getSubject();
+        String email = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role))
@@ -47,7 +47,7 @@ public class JWTAuthorization extends OncePerRequestFilter {
         System.out.println(roles);
         System.out.println(authorities);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

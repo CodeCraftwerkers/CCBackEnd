@@ -32,12 +32,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<UserResponseDTO> getAllUsers() {
-         return userRepository.findAll()
+        return userRepository.findAll()
                 .stream()
                 .map(userMapper::toResponse)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
@@ -67,9 +67,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-        .map(user -> new UserDetail(user))
-        .orElseThrow(() -> new UsernameNotFoundException(username));
+                .map(user -> new UserDetail(user))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    @Override
+    public UserDetails loadUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email no registrado"));
+        return new UserDetail(user);
     }
 }
