@@ -31,8 +31,8 @@ public class SpringConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/events", "/api/v1/events/filter",
                                 "/api/v1/events/**")
                         .permitAll()
-                       .requestMatchers(HttpMethod.GET, "/api/v1/events/signup/**/").hasRole("USER")
-                       .requestMatchers(HttpMethod.DELETE, "/api/v1/events/**/").authenticated()
+                       .requestMatchers(HttpMethod.GET, "/api/v1/events/signup/**").hasRole("USER")
+                       .requestMatchers(HttpMethod.DELETE, "/api/v1/events/**").authenticated()
                         .anyRequest().authenticated())
                 .addFilter(jwtAuthentication)
                 .addFilterAfter(new JWTAuthorization(), JWTAuthentication.class)
