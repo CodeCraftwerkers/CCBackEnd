@@ -63,7 +63,7 @@ WIP
   
 ## Estructura del Proyecto
 
-A continuación se muestra la estructura del proyecto Periódico de Ayer, organizada por capas siguiendo la arquitectura estándar de una aplicación Spring Boot
+A continuación se muestra la estructura del proyecto Code Crafters, organizada por capas siguiendo la arquitectura estándar de una aplicación Spring Boot
 
 ```
 CCBACKEND
@@ -94,6 +94,15 @@ CCBACKEND
 │       │   ├── repository/
 │       │   │   ├── ArticleRepository.java
 │       │   │   └── UserRepository.java
+│       │   ├── security/
+│       │   │   ├── filter/
+│       │   │   │   ├── JWTAuthentication.java
+│       │   │   │   └── JWTAuthorization.java
+│       │   │   └── CustomAuthenticationManager.java
+│       │   │   └── SpringConfig.java
+│       │   │   └── UserDetail.java
+│       │   ├── seeder/
+│       │   │   ├── DataBaseSeeder.java
 │       │   ├── service/
 │       │   │   ├── event/
 │       │   │   │   ├── EventService.java
@@ -102,9 +111,13 @@ CCBACKEND
 │       │   │       ├── UserService.java
 │       │   │       └── UserServiceImpl.java
 │       │   └── CcbackendApplication.java
-│       └── resources/
-│           └── application.properties
-├── test/java/com/femcoders/periodico_ayer/
+│       │   └── resources/
+│       │       └── application.properties
+│       ├── test/java/com/femcoders/periodico_ayer/
+│       │   ├── controller/
+│       │   │   └── UserControllerTest.java
+│       │   ├── service/
+│       │   │   └── UserServiceImplTest.java
 │   └── CcbackendApplicationTests.java
 ├── target/
 ├── .env
