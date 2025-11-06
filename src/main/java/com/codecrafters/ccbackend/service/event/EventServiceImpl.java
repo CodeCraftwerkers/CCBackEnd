@@ -41,6 +41,10 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
+        User current = getCurrentUserOrThrow();
+        if (!event.getUser().getId().equals(current.getId())) {
+            throw new RuntimeException("No tienes permiso para editar este evento");
+        }
         eventMapper.updateEntityFromRequest(dto, event);
         event = eventRepository.save(event);
         return eventMapper.toResponse(event);
@@ -48,10 +52,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void deleteEvent(Long eventId) {
-        if (!eventRepository.existsById(eventId)) {
-            throw new RuntimeException("Evento no encontrado");
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+
+        User current = getCurrentUserOrThrow();
+
+        if (!event.getUser().getId().equals(current.getId())) {
+            throw new RuntimeException("No tienes permiso para eliminar este evento");
         }
-        eventRepository.deleteById(eventId);
+
+        eventRepository.delete(event);
     }
 
     @Override
@@ -214,5 +224,15 @@ public class EventServiceImpl implements EventService {
         List<Event> paged = joinedEvents.subList(start, end);
 
         return new PageImpl<>(paged, pageable, joinedEvents.size()).map(eventMapper::toResponse);
+    }
+
+    private User getCurrentUserOrThrow() {
+        String email = org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }

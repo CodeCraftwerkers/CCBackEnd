@@ -40,15 +40,17 @@ public class SpringConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/events").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/events/filter").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/events/*//*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/events/*//*").authenticated()
+
+                        .requestMatchers(HttpMethod.POST, "/api/v1/events/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/events/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/events/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilter(jwtAuthentication)
                 .addFilterAfter(new JWTAuthorization(), JWTAuthentication.class)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
 
-        //a -> a.anyRequest().permitAll());
+
     }
 
     @Bean
