@@ -29,5 +29,6 @@ public interface EventService {
     EventResponseDTO unSign(Long eventId, Long userId);
     List<UserResponseDTO> getAttendees(Long eventId);
     Page<EventResponseDTO> getEventsCreatedByUsername(String username, int page, int size);
+    Page<EventResponseDTO> getEventsUserJoined(String emailOrUsername, int page, int size);
 
 }

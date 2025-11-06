@@ -82,13 +82,24 @@ public class EventController {
 
     @GetMapping("/created")
     public ResponseEntity<Page<EventResponseDTO>> getEventsCreatedByUser(
-        Authentication authentication,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size) {
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
 
-    String username = authentication.getName();
-    Page<EventResponseDTO> events = eventService.getEventsCreatedByUsername(username, page, size);
-    return ResponseEntity.ok(events);
+        String username = authentication.getName();
+        Page<EventResponseDTO> events = eventService.getEventsCreatedByUsername(username, page, size);
+        return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/joined")
+    public ResponseEntity<Page<EventResponseDTO>> getEventsUserJoined(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+
+        String identifier = authentication.getName();
+        Page<EventResponseDTO> events = eventService.getEventsUserJoined(identifier, page, size);
+        return ResponseEntity.ok(events);
     }
 
 }

@@ -11,6 +11,7 @@ import com.codecrafters.ccbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.*;
@@ -191,10 +192,27 @@ public class EventServiceImpl implements EventService {
     public Page<EventResponseDTO> getEventsCreatedByUsername(String identifier, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         User user = userRepository.findByEmail(identifier)
-            .orElseGet(() -> userRepository.findByUsername(identifier)
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
+                .orElseGet(() -> userRepository.findByUsername(identifier)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
 
-    Page<Event> events = eventRepository.findByUserUsername(user.getUsername(), pageable);
-    return events.map(eventMapper::toResponse);
+        Page<Event> events = eventRepository.findByUserUsername(user.getUsername(), pageable);
+        return events.map(eventMapper::toResponse);
+    }
+
+    @Override
+    public Page<EventResponseDTO> getEventsUserJoined(String identifier, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        User user = userRepository.findByEmail(identifier)
+                .orElseGet(() -> userRepository.findByUsername(identifier)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
+
+        List<Event> joinedEvents = new ArrayList<>(user.getSignedUpEvents());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), joinedEvents.size());
+        List<Event> paged = joinedEvents.subList(start, end);
+
+        return new PageImpl<>(paged, pageable, joinedEvents.size()).map(eventMapper::toResponse);
     }
 }
