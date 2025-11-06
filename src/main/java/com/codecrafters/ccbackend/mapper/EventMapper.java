@@ -4,7 +4,7 @@ import org.mapstruct.*;
 
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
 import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
-import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserSummaryDTO;
 import com.codecrafters.ccbackend.entity.Event;
 import com.codecrafters.ccbackend.entity.User;
 
@@ -15,11 +15,11 @@ public interface EventMapper {
     @Mapping(target = "attendees", ignore = true)
     Event toEntity(EventRequestDTO request, User user);
 
-    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "user")
     @Mapping(target = "attendees")
     EventResponseDTO toResponse(Event event);
 
-    UserResponseDTO userToUserResponseDTO(User user);
+    UserSummaryDTO userToUserSummaryDTO(User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
