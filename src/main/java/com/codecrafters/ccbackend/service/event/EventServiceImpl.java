@@ -1,8 +1,7 @@
 package com.codecrafters.ccbackend.service.event;
 
 import com.codecrafters.ccbackend.dto.request.EventRequestDTO;
-import com.codecrafters.ccbackend.dto.response.EventResponseDTO;
-import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.*;
 import com.codecrafters.ccbackend.entity.Event;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.mapper.EventMapper;
@@ -15,8 +14,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -31,7 +28,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponseDTO createEvent(EventRequestDTO dto) {
         User creator = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         Event event = eventMapper.toEntity(dto, creator);
         event = eventRepository.save(event);
@@ -41,7 +38,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponseDTO updateEvent(Long eventId, EventRequestDTO dto) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
         eventMapper.updateEntityFromRequest(dto, event);
         event = eventRepository.save(event);
@@ -51,7 +48,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(Long eventId) {
         if (!eventRepository.existsById(eventId)) {
-            throw new RuntimeException("Event not found");
+            throw new RuntimeException("Evento no encontrado");
         }
         eventRepository.deleteById(eventId);
     }
@@ -59,7 +56,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponseDTO getEventById(Long eventId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
         return eventMapper.toResponse(event);
     }
 
@@ -81,7 +78,7 @@ public class EventServiceImpl implements EventService {
                 Event.EventCategory category = Event.EventCategory.valueOf(categoryStr.toUpperCase());
                 events = eventRepository.findByCategory(category, pageable);
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("Invalid category: " + categoryStr);
+                throw new RuntimeException("Categoria invalida: " + categoryStr);
             }
         }
 
@@ -112,7 +109,7 @@ public class EventServiceImpl implements EventService {
                     startRange = now.withDayOfMonth(1).toLocalDate().atStartOfDay();
                     endRange = startRange.plusMonths(1);
                 }
-                default -> throw new RuntimeException("Invalid timeRange. Use: today, week, month");
+                default -> throw new RuntimeException("Invalido timeRange. Usar: today, week, month");
             }
 
             events = eventRepository.findByStartDateTimeBetween(startRange, endRange, pageable);
@@ -126,65 +123,55 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponseDTO signUp(Long eventId) {
+    public EventResponseDTO signUp(Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
-        User current = getCurrentUserOrThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (event.getAttendees().contains(current)) {
-            throw new RuntimeException("User already signed up for this event");
+        if (event.getAttendees().contains(user)) {
+            throw new RuntimeException("Usuario ya apuntado a este evento");
         }
 
         if (event.getMaxAttendees() != null &&
                 event.getAttendees().size() >= event.getMaxAttendees()) {
-            throw new RuntimeException("Event is full");
+            throw new RuntimeException("Este evento está lleno");
         }
 
-        current.getSignedUpEvents().add(event);
-        event.getAttendees().add(current);
+        user.getSignedUpEvents().add(event);
+        event.getAttendees().add(user);
 
-        userRepository.save(current);
+        userRepository.save(user);
 
         return eventMapper.toResponse(event);
     }
 
     @Override
-    public EventResponseDTO unSign(Long eventId) {
+    public EventResponseDTO unSign(Long eventId, Long userId) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
-        User current = getCurrentUserOrThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!event.getAttendees().contains(current)) {
-            throw new RuntimeException("User is not signed up for this event");
+        if (!event.getAttendees().contains(user)) {
+            throw new RuntimeException("Usuario no apuntado a este evento");
         }
 
-        current.getSignedUpEvents().remove(event);
-        event.getAttendees().remove(current);
+        user.getSignedUpEvents().remove(event);
+        event.getAttendees().remove(user);
+
+        userRepository.save(user);
 
         return eventMapper.toResponse(event);
-    }
-
-    private User getCurrentUserOrThrow() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth.getName() == null) {
-            throw new RuntimeException("No authenticated user");
-        }
-        String name = auth.getName();
-
-        System.out.println(auth);
-
-        return userRepository.findByUsername(name)
-                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
-
     }
 
     @Override
     public List<UserResponseDTO> getAttendees(Long eventId) {
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
         return event.getAttendees()
                 .stream()

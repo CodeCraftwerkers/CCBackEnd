@@ -37,8 +37,15 @@ public class DatabaseSeeder implements CommandLineRunner {
             .role("USER")
             .build();
 
+            User user_three = User.builder()
+            .username("maria")
+            .password(bcrypt.encode("654321"))
+            .email("maria@email.com")
+            .role("USER")
+            .build();
+
            
-            userRepository.saveAll(List.of(user_one, user_two));
+            userRepository.saveAll(List.of(user_one, user_two, user_three));
         }
     }
 

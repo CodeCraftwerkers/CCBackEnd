@@ -16,4 +16,6 @@ public interface UserService {
     void deleteUser(Long id);
     //UserDetails loadUserByUsername(String name);
     UserDetails loadUserByEmail(String name);
+    User findByEmail(String email);
+    UserResponseDTO toResponse(User user);
 }

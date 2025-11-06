@@ -15,8 +15,6 @@ import com.codecrafters.ccbackend.service.event.EventService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -68,14 +66,14 @@ public class EventController {
     }
 
     
-    @GetMapping("/signup/{id}")
-    public EventResponseDTO signUp(@PathVariable Long id) {
-        return eventService.signUp(id);
+    @PostMapping("/{eventId}/signup/{userId}")
+    public ResponseEntity<EventResponseDTO> signUp(@PathVariable Long eventId, @PathVariable Long userId) {
+        return ResponseEntity.ok(eventService.signUp(eventId, userId));
     }
 
-    @DeleteMapping("/signup/{id}")
-    public EventResponseDTO unSign(@PathVariable Long id) {
-        return eventService.unSign(id);
+    @DeleteMapping("/{eventId}/signup/{userId}")
+    public ResponseEntity<EventResponseDTO> unSign(@PathVariable Long eventId, @PathVariable Long userId) {
+        return ResponseEntity.ok(eventService.unSign(eventId, userId));
     }
 
     @GetMapping("/{id}/attendees")

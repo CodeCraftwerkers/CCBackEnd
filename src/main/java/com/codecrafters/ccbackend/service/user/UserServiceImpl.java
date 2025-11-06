@@ -3,6 +3,7 @@ package com.codecrafters.ccbackend.service.user;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.codecrafters.ccbackend.dto.request.UserRequestDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
@@ -22,10 +23,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDTO addUser(UserRequestDTO userRequest) {
         User newUser = userMapper.toEntity(userRequest);
+        newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         User saved = userRepository.save(newUser);
         return userMapper.toResponse(saved);
     }
@@ -41,14 +44,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return userMapper.toResponse(user);
     }
 
     @Override
     public UserResponseDTO updateUser(Long id, User user) {
         User existing = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         existing.setUsername(user.getUsername());
         existing.setEmail(user.getEmail());
@@ -61,7 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Usuario no encontrado");
         }
         userRepository.deleteById(id);
     }
@@ -78,5 +81,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email no registrado"));
         return new UserDetail(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con email: " + email));
+    }
+
+    @Override
+    public UserResponseDTO toResponse(User user) {
+        return userMapper.toResponse(user);
     }
 }

@@ -25,8 +25,8 @@ public interface EventService {
             LocalDateTime end,
             int page,
             int size);
-    EventResponseDTO signUp(Long eventId);
-    EventResponseDTO unSign(Long eventId);
+    EventResponseDTO signUp(Long eventId, Long userId);
+    EventResponseDTO unSign(Long eventId, Long userId);
     List<UserResponseDTO> getAttendees(Long eventId);
 
 }

@@ -36,16 +36,18 @@ public class SpringConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/events", "/api/v1/events/filter",
-                                "/api/v1/events/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/events/signup/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/events/**").authenticated()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events/filter").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/events/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/events/*//*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/events/*//*").authenticated()
+                        .anyRequest().permitAll())
                 .addFilter(jwtAuthentication)
                 .addFilterAfter(new JWTAuthorization(), JWTAuthentication.class)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
+
+        //a -> a.anyRequest().permitAll());
     }
 
     @Bean
