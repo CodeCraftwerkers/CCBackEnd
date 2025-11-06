@@ -186,4 +186,15 @@ public class EventServiceImpl implements EventService {
         dto.setEmail(user.getEmail());
         return dto;
     }
+
+    @Override
+    public Page<EventResponseDTO> getEventsCreatedByUsername(String identifier, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        User user = userRepository.findByEmail(identifier)
+            .orElseGet(() -> userRepository.findByUsername(identifier)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado")));
+
+    Page<Event> events = eventRepository.findByUserUsername(user.getUsername(), pageable);
+    return events.map(eventMapper::toResponse);
+    }
 }
