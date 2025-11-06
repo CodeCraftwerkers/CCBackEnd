@@ -91,5 +91,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userMapper.toResponse(user);
     }
 
+    @Override
+public void changePassword(String email, String oldPassword, String newPassword) {
+    User user = findByEmail(email);
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        throw new IllegalArgumentException("Contraseña actual incorrecta");
+    }
+    user.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(user);
+}
    
 }

@@ -20,4 +20,8 @@ public interface UserService {
     User findByEmail(String email);
     UserResponseDTO toResponse(User user);
     UserResponseDTO updateUser(Long id, UserUpdateDTO dto);
+
+    void changePassword(String email, String oldPassword, String newPassword);
 }
+
+
