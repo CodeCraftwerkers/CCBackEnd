@@ -2,6 +2,7 @@ package com.codecrafters.ccbackend.mapper;
 
 import com.codecrafters.ccbackend.dto.request.UserRequestDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserUpdateDTO;
 import com.codecrafters.ccbackend.entity.User;
 import org.mapstruct.*;
 
@@ -15,5 +16,8 @@ public interface UserMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromRequest(UserRequestDTO request, @MappingTarget User user);
+    @Mapping(target = "password", ignore = true) 
+    @Mapping(target = "signedUpEvents", ignore = true)
+   // @Mapping(target = "createdEvents", ignore = true)
+    void updateEntityFromRequest(UserUpdateDTO request, @MappingTarget User user);
 }

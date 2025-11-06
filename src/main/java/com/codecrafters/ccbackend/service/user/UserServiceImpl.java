@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.codecrafters.ccbackend.dto.request.UserRequestDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserUpdateDTO;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.mapper.UserMapper;
 import com.codecrafters.ccbackend.repository.UserRepository;
@@ -49,16 +50,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, User user) {
-        User existing = userRepository.findById(id)
+    public UserResponseDTO updateUser(Long id, UserUpdateDTO dto) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        existing.setUsername(user.getUsername());
-        existing.setEmail(user.getEmail());
-        existing.setPassword(user.getPassword());
-
-        User updated = userRepository.save(existing);
-        return userMapper.toResponse(updated);
+        userMapper.updateEntityFromRequest(dto, user);
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Override
@@ -93,4 +90,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserResponseDTO toResponse(User user) {
         return userMapper.toResponse(user);
     }
+
+   
 }

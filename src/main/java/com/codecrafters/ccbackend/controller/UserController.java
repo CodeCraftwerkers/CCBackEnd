@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.codecrafters.ccbackend.dto.request.UserRequestDTO;
 import com.codecrafters.ccbackend.dto.response.UserResponseDTO;
+import com.codecrafters.ccbackend.dto.response.UserUpdateDTO;
 import com.codecrafters.ccbackend.entity.User;
 import com.codecrafters.ccbackend.service.user.UserService;
 
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
