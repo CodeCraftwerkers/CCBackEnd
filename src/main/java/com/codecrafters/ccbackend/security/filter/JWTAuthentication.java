@@ -35,17 +35,17 @@ public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
     throws AuthenticationException {
         
         try {
-            //Log 1: Indica que o filtro JWTAuthentication foi chamado
+            //indica que o filtro JWTAuthentication foi chamado
         System.out.println(" [JWTAuthentication] Tentando autenticar login...");
 
-        //Log 2: Mostra o corpo bruto da requisição (JSON enviado pelo front)
+        //corpo da requisição (JSON enviado pelo front)
         String body = request.getReader().lines().reduce("", (acc, line) -> acc + line);
         System.out.println(" [JWTAuthentication] Corpo recebido: " + body);
 
         // Converte o JSON em um objeto User
         User user = new ObjectMapper().readValue(body, User.class);
 
-        //Log 3: Mostra o email e senha recebidos
+        // email e senha recebidos
         System.out.println(" [JWTAuthentication] Email: " + user.getEmail());
         System.out.println(" [JWTAuthentication] Senha: " + user.getPassword());
             Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(),
