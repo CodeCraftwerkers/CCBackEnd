@@ -32,10 +32,44 @@ Este proyecto fue desarrollado utilizando un conjunto moderno de tecnologías y 
 
 ## Funcionalidades
 
-WIP
+La aplicación ofrece un conjunto completo de operaciones para la gestión de eventos de Code Crafters:
 
-**Relaciones:**
- WIP
+## Público (sin autenticación)
+
+- Página de inicio: Explica qué es Code Crafters y cómo funciona la plataforma.
+- Listar eventos: Muestra todos los eventos creados por los usuarios.
+- Paginación de eventos: Presenta máximo 15 eventos por página.
+- Filtros de eventos: Permite filtrar por categoría (presencial u online), nombre de usuario, nombre de evento y fecha.
+- Detalle de evento: Cada evento se muestra con imagen, título, descripción, fecha, hora, aforo máximo, ubicación y categoría.
+
+## Autenticación y cuentas
+
+- Registro de usuarios: Crea cuentas con nombre, correo y contraseña.
+- Inicio de sesión: Permite a los usuarios acceder con sus credenciales.
+- Cierre de sesión: Finaliza la sesión del usuario de forma segura.
+
+## Perfil de usuario
+
+- Gestión de perfil: Los usuarios pueden ver y actualizar su nombre, correo, contraseña e imagen de perfil.
+- Gestión de eventos (usuarios autenticados)
+- Crear eventos: Cualquier usuario autenticado puede crear nuevos eventos con todos los campos requeridos.
+- Editar y eliminar: Cada usuario puede editar y eliminar solo sus propios eventos.
+- Mis eventos: Vista/endpoint para listar los eventos creados por el usuario.
+
+## Asistencias a eventos
+
+- Apuntarse a un evento: Cualquier usuario autenticado puede inscribirse en un evento.
+- Desapuntarse de un evento: Posibilidad de cancelar la inscripción.
+- Evitar duplicados: Se restringe que un usuario se apunte más de una vez al mismo evento.
+- Ver asistentes: Los usuarios registrados pueden ver a las personas inscritas en un evento.
+
+## Relaciones:
+
+- Usuario → Evento (1:N): Cada usuario puede crear varios eventos.
+- Evento → Usuario (N:1): Cada evento pertenece a un único usuario creador.
+- Usuario ↔ Evento (N:M): Un usuario puede apuntarse a varios eventos y un evento puede tener varios usuarios inscritos (relación de asistencia).
+- Evento → Categoría (N:1): Cada evento pertenece a una categoría (presencial u online).
+- Categoría → Evento (1:N): Una categoría puede tener varios eventos asociados.
 
 ## Cómo iniciar el proyecto
 
