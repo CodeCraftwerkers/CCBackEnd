@@ -1,11 +1,13 @@
-# Code Crafters
+# Code Crafters - Backend
 
-## Objetivos
+## 🎯 Objetivos
 
 Code Crafters es una plataforma web que conecta a la comunidad tecnológica mediante eventos online y presenciales.
 Promueve la colaboración, el aprendizaje y la innovación en un entorno moderno y seguro, desarrollado con Spring Boot, React.js y PostgreSQL.
 
-## Competencias Técnicas
+<img width="1897" height="904" alt="2" src="https://github.com/user-attachments/assets/08d6577b-006b-4d97-a9a2-8936d882711b" />
+
+## 🧩 Competencias Técnicas
 
 Este proyecto desarrolla las siguientes competencias técnicas:
 
@@ -15,7 +17,7 @@ Este proyecto desarrolla las siguientes competencias técnicas:
 - **Tests:** Validación del comportamiento del sistema utilizando herramientas como JUnit y Mockito.
 
   
-## Tecnologías y Herramientas
+## ⚙️ Tecnologías y Herramientas
 
 Este proyecto fue desarrollado utilizando un conjunto moderno de tecnologías y herramientas que garantizan rendimiento, escalabilidad y buenas prácticas en el desarrollo backend:
 
@@ -30,11 +32,11 @@ Este proyecto fue desarrollado utilizando un conjunto moderno de tecnologías y 
   - Mockito
   - JUnit
 
-## Funcionalidades
+##  ✨ Funcionalidades
 
 La aplicación ofrece un conjunto completo de operaciones para la gestión de eventos de Code Crafters:
 
-## Público (sin autenticación)
+**Público (sin autenticación)**
 
 - Página de inicio: Explica qué es Code Crafters y cómo funciona la plataforma.
 - Listar eventos: Muestra todos los eventos creados por los usuarios.
@@ -42,13 +44,13 @@ La aplicación ofrece un conjunto completo de operaciones para la gestión de ev
 - Filtros de eventos: Permite filtrar por categoría (presencial u online), nombre de usuario, nombre de evento y fecha.
 - Detalle de evento: Cada evento se muestra con imagen, título, descripción, fecha, hora, aforo máximo, ubicación y categoría.
 
-## Autenticación y cuentas
+**Autenticación y cuentas**
 
 - Registro de usuarios: Crea cuentas con nombre, correo y contraseña.
 - Inicio de sesión: Permite a los usuarios acceder con sus credenciales.
 - Cierre de sesión: Finaliza la sesión del usuario de forma segura.
 
-## Perfil de usuario
+**Perfil de usuario**
 
 - Gestión de perfil: Los usuarios pueden ver y actualizar su nombre, correo, contraseña e imagen de perfil.
 - Gestión de eventos (usuarios autenticados)
@@ -56,14 +58,14 @@ La aplicación ofrece un conjunto completo de operaciones para la gestión de ev
 - Editar y eliminar: Cada usuario puede editar y eliminar solo sus propios eventos.
 - Mis eventos: Vista/endpoint para listar los eventos creados por el usuario.
 
-## Asistencias a eventos
+**Asistencias a eventos**
 
 - Apuntarse a un evento: Cualquier usuario autenticado puede inscribirse en un evento.
 - Desapuntarse de un evento: Posibilidad de cancelar la inscripción.
 - Evitar duplicados: Se restringe que un usuario se apunte más de una vez al mismo evento.
 - Ver asistentes: Los usuarios registrados pueden ver a las personas inscritas en un evento.
 
-## Relaciones:
+## 📱 Relaciones:
 
 - Usuario → Evento (1:N): Cada usuario puede crear varios eventos.
 - Evento → Usuario (N:1): Cada evento pertenece a un único usuario creador.
@@ -71,7 +73,7 @@ La aplicación ofrece un conjunto completo de operaciones para la gestión de ev
 - Evento → Categoría (N:1): Cada evento pertenece a una categoría (presencial u online).
 - Categoría → Evento (1:N): Una categoría puede tener varios eventos asociados.
 
-## Cómo iniciar el proyecto
+## 🚀 Cómo iniciar el proyecto
 
 ### Requisitos previos
 - Java 21 instalado
@@ -95,7 +97,7 @@ La aplicación ofrece un conjunto completo de operaciones para la gestión de ev
    - La API estará disponible en: `http://localhost:8080`
    - Puedes probar los endpoints con Postman o cualquier cliente HTTP
   
-## Estructura del Proyecto
+## 🧩 Estructura del Proyecto
 
 A continuación se muestra la estructura del proyecto Code Crafters, organizada por capas siguiendo la arquitectura estándar de una aplicación Spring Boot
 
@@ -157,7 +159,7 @@ CCBACKEND
 ├── .env
 └── .gitattributes
 ```
-## Contactos
+## 👩‍💻 Contactos
 
 ¿Tienes dudas o quieres saber más sobre el proyecto?
 
