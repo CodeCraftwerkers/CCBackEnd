@@ -21,8 +21,7 @@ public class EventResponseDTO {
     private String location;
     private EventCategory category;
     private String imageUrl;
-    //private Long userId;
-    private UserSummaryDTO user; 
+    private UserSummaryDTO user;
     private List<UserResponseDTO> attendees;
-   
+
 }

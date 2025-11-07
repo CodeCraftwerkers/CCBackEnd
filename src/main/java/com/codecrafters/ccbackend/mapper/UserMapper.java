@@ -18,6 +18,5 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true) 
     @Mapping(target = "signedUpEvents", ignore = true)
-   // @Mapping(target = "createdEvents", ignore = true)
     void updateEntityFromRequest(UserUpdateDTO request, @MappingTarget User user);
 }

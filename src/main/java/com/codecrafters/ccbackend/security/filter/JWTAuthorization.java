@@ -27,9 +27,6 @@ public class JWTAuthorization extends OncePerRequestFilter {
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
 
-       // System.out.println("Requisição recebida: " + request.getMethod() + " " + request.getRequestURI());
-       // System.out.println("Header Authorization: " + request.getHeader("Authorization"));
-
         if (header == null || !header.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -41,16 +38,11 @@ public class JWTAuthorization extends OncePerRequestFilter {
                 .build()
                 .verify(token);
 
-        //System.out.println("Token válido. Subject: " + decodedJWT.getSubject());
-
         String email = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
         List<GrantedAuthority> authorities = roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role))
                 .collect(Collectors.toList());
-
-        //System.out.println(roles);
-        //System.out.println(authorities);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
 

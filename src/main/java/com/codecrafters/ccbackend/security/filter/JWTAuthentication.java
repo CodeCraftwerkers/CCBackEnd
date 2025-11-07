@@ -31,30 +31,22 @@ public class JWTAuthentication extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            
-    throws AuthenticationException {
-        
+
+            throws AuthenticationException {
+
         try {
-            //indica que o filtro JWTAuthentication foi chamado
-        System.out.println(" [JWTAuthentication] Tentando autenticar login...");
 
-        //corpo da requisição (JSON enviado pelo front)
-        String body = request.getReader().lines().reduce("", (acc, line) -> acc + line);
-        System.out.println(" [JWTAuthentication] Corpo recebido: " + body);
+            String body = request.getReader().lines().reduce("", (acc, line) -> acc + line);
 
-        // Converte o JSON em um objeto User
-        User user = new ObjectMapper().readValue(body, User.class);
+            User user = new ObjectMapper().readValue(body, User.class);
 
-        // email e senha recebidos
-        System.out.println(" [JWTAuthentication] Email: " + user.getEmail());
-        System.out.println(" [JWTAuthentication] Senha: " + user.getPassword());
             Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(),
                     user.getPassword());
             return customAuthenticationManager.authenticate(authentication);
         } catch (Exception e) {
             System.err.println("Erro durante autenticação: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-        e.printStackTrace(); // mostra onde ocorreu
-        throw new RuntimeException("Erro ao tentar autenticar usuário: " + e.getMessage(), e);
+            e.printStackTrace(); 
+            throw new RuntimeException("Erro ao tentar autenticar usuário: " + e.getMessage(), e);
         }
     }
 

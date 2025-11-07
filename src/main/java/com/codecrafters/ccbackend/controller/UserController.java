@@ -55,14 +55,13 @@ public class UserController {
     }
 
     @PutMapping("/change-password")
-public ResponseEntity<String> changePassword(
-        @RequestParam String oldPassword,
-        @RequestParam String newPassword,
-        Authentication authentication) {
-    String email = authentication.getName();
-    userService.changePassword(email, oldPassword, newPassword);
-    return ResponseEntity.ok("Contraseña actualizada correctamente");
-}
-
+    public ResponseEntity<String> changePassword(
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword,
+            Authentication authentication) {
+        String email = authentication.getName();
+        userService.changePassword(email, oldPassword, newPassword);
+        return ResponseEntity.ok("Contraseña actualizada correctamente");
+    }
 
 }
