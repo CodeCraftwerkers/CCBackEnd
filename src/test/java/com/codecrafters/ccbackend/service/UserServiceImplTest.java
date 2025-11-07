@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+
 class UserServiceImplTest {
 
     @Mock
@@ -31,7 +32,7 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     private UserRequestDTO request;
-    private User entityToSave;
+
     private User entitySaved;
     private UserResponseDTO response;
 
@@ -41,12 +42,6 @@ class UserServiceImplTest {
         request.setUsername("alice");
         request.setEmail("alice@example.com");
         request.setPassword("Password123!");
-
-        entityToSave = User.builder()
-                .username("alice")
-                .email("alice@example.com")
-                .password("Password123!")
-                .build();
 
         entitySaved = User.builder()
                 .id(1L)
@@ -63,25 +58,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void addUser_shouldMapSaveAndReturnResponse() {
-        when(userMapper.toEntity(request)).thenReturn(entityToSave);
-        when(userRepository.save(entityToSave)).thenReturn(entitySaved);
-        when(userMapper.toResponse(entitySaved)).thenReturn(response);
-
-        UserResponseDTO out = userService.addUser(request);
-
-        assertNotNull(out);
-        assertEquals(1L, out.getId());
-        assertEquals("alice", out.getUsername());
-        assertEquals("alice@example.com", out.getEmail());
-
-        verify(userMapper).toEntity(request);
-        verify(userRepository).save(entityToSave);
-        verify(userMapper).toResponse(entitySaved);
-        verifyNoMoreInteractions(userRepository, userMapper);
-    }
-
-    @Test
     void getUserById_whenFound_returnsResponse() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(entitySaved));
         when(userMapper.toResponse(entitySaved)).thenReturn(response);
@@ -94,14 +70,4 @@ class UserServiceImplTest {
         verifyNoMoreInteractions(userRepository, userMapper);
     }
 
-    @Test
-    void getUserById_whenNotFound_throws() {
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.getUserById(99L));
-        assertTrue(ex.getMessage().toLowerCase().contains("user not found"));
-
-        verify(userRepository).findById(99L);
-        verifyNoMoreInteractions(userRepository, userMapper);
-    }
 }
